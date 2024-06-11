@@ -2,7 +2,10 @@
 #include <iostream>
 #include <map>
 #include <vector>
-
+#include <queue>
+#include <set>
+#include <limits>
+#include <algorithm>
 // Create a namespace alias for std::filesystem
 namespace fs = std::filesystem;
 
@@ -67,14 +70,136 @@ public:
             }
         }
     }
+    // Find the shortest path between two directories
+    std::vector<fs::path> shortestPath(const fs::path& source, const fs::path& destination) {
+        std::map<fs::path, fs::path> previous;
+        std::map<fs::path, int> distances;
+        std::set<fs::path> unvisited;
+
+        for (const auto& pair : adjList) {
+            distances[pair.first] = std::numeric_limits<int>::max();
+            previous[pair.first] = "";
+            unvisited.insert(pair.first);
+        }
+
+        distances[source] = 0;
+
+        while (!unvisited.empty()) {
+            fs::path current = *unvisited.begin();
+            for (const auto& path : unvisited) {
+                if (distances[path] < distances[current]) {
+                    current = path;
+                }
+            }
+
+            if (current == destination) {
+                break;
+            }
+
+            unvisited.erase(current);
+
+            for (const auto& neighbor : adjList[current]) {
+                int alt = distances[current] + 1;
+                if (alt < distances[neighbor]) {
+                    distances[neighbor] = alt;
+                    previous[neighbor] = current;
+                }
+            }
+        }
+
+        std::vector<fs::path> path;
+        for (fs::path p = destination; p != ""; p = previous[p]) {
+            path.push_back(p);
+        }
+        std::reverse(path.begin(), path.end());
+
+        return path;
+    }
+
+    // Find a minimum spanning tree of the file system
+    std::map<fs::path, std::vector<fs::path>> minSpanTree() {
+        std::map<fs::path, std::vector<fs::path>> tree;
+        std::set<fs::path> visited;
+        std::priority_queue<std::pair<int, fs::path>, std::vector<std::pair<int, fs::path>>, std::greater<>> pq;
+
+        fs::path start = adjList.begin()->first;
+        pq.push({0, start});
+
+        while (!pq.empty()) {
+            fs::path current = pq.top().second;
+            pq.pop();
+
+            if (visited.count(current)) {
+                continue;
+            }
+
+            visited.insert(current);
+
+            for (const auto& neighbor : adjList[current]) {
+                if (!visited.count(neighbor)) {
+                    tree[current].push_back(neighbor);
+                    pq.push({1, neighbor});
+                }
+            }
+        }
+
+        return tree;
+    }
 };
 
+// The file paths chosen should be changed to smaller directory. I chose these to push the limits of the program and thus can take a long time to run... They should be run 1 at at time.
+//The file system error in the terminal is due to the program not having the necessary permissions to access the files. This is normal and can be ignored.
 int main() {
     // Create a FileSystemGraph object
     FileSystemGraph graph;
     // Build the graph starting from the root directory
     graph.buildGraph("C:/");  // Replace with the path to the root directory
-    // Print the graph
-    graph.printGraph();
+    // Print the graph. This will go through the entire file system and will take some time depending on the size of the file system.
+    // graph.printGraph();
+
+    // Demonstrate the shortestPath method
+    // Test 1: Find the shortest path between two directories
+    fs::path source1 = "C:/Windows";
+    fs::path destination1 = "C:/Windows/System32";
+    std::vector<fs::path> path1 = graph.shortestPath(source1, destination1);
+    std::cout << "Shortest path from " << source1 << " to " << destination1 << ":\n";
+    for (const auto& p : path1) {
+        std::cout << "  " << p << "\n";
+        std::cout << "Length of shortest path: " << path1.size() << "\n";
+    }
+
+    // Test 2: Find the shortest path between two different directories
+    // fs::path source2 = "C:/Windows/System32";
+    // fs::path destination2 = "C:/Windows/System32/drivers";
+    // std::vector<fs::path> path2 = graph.shortestPath(source2, destination2);
+    // std::cout << "Shortest path from " << source2 << " to " << destination2 << ":\n";
+    // for (const auto& p : path2) {
+    //     std::cout << "  " << p << "\n";
+    //     std::cout << "Length of shortest path: " << path2.size() << "\n";
+    // }
+
+    // // Demonstrate the minSpanTree method
+    // // Test 1: Find a minimum spanning tree of the file system
+    // std::map<fs::path, std::vector<fs::path>> tree1 = graph.minSpanTree();
+    // std::cout << "Minimum spanning tree:\n";
+    // for (const auto& pair : tree1) {
+    //     std::cout << pair.first << ":\n";
+    //     for (const auto& neighbor : pair.second) {
+    //         std::cout << "  " << neighbor << "\n";
+    //     }
+    // }
+
+    // // Test 2: Build a new graph from a different directory and find its minimum spanning tree
+    // FileSystemGraph graph2;
+    // graph2.buildGraph("C:/Program Files");  // Replace with the path to the directory
+    // std::map<fs::path, std::vector<fs::path>> tree2 = graph2.minSpanTree();
+    // std::cout << "Minimum spanning tree of the second graph:\n";
+    // for (const auto& pair : tree2) {
+    //     std::cout << pair.first << ":\n";
+    //     for (const auto& neighbor : pair.second) {
+    //         std::cout << "  " << neighbor << "\n";
+    //     }
+    // }
+
     return 0;
 }

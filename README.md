@@ -7,3 +7,7 @@ Tests: Create tests for each function. For addVertex and addEdge, we can check i
 Implementation:  Implement the Graph class with the addVertex, addEdge, shortestPath, and minSpanTree functions. The addVertex function will add a new vertex to the adjacency matrix. The addEdge function will add a new edge to the adjacency matrix. The shortestPath function will use Dijkstra's algorithm to find the shortest path between two vertices. The minSpanTree function will use Prim's algorithm to find a minimum spanning tree of the graph.
 
 Complexity Analysis: The complexity of addVertex and addEdge is O(V^2), where V is the number of vertices. The complexity of shortestPath and minSpanTree is O(V^2), but it can be improved to O(E + V log V) with a priority queue, where E is the number of edges.
+
+# First version screenshot
+This was amazing to watch. It took about 3 minutes to go through all the directories in the graph
+![alt text](image.png)
