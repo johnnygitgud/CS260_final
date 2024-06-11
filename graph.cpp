@@ -169,37 +169,37 @@ int main() {
     }
 
     // Test 2: Find the shortest path between two different directories
-    // fs::path source2 = "C:/Windows/System32";
-    // fs::path destination2 = "C:/Windows/System32/drivers";
-    // std::vector<fs::path> path2 = graph.shortestPath(source2, destination2);
-    // std::cout << "Shortest path from " << source2 << " to " << destination2 << ":\n";
-    // for (const auto& p : path2) {
-    //     std::cout << "  " << p << "\n";
-    //     std::cout << "Length of shortest path: " << path2.size() << "\n";
-    // }
+    fs::path source2 = "C:/Windows/System32";
+    fs::path destination2 = "C:/Windows/System32/drivers";
+    std::vector<fs::path> path2 = graph.shortestPath(source2, destination2);
+    std::cout << "Shortest path from " << source2 << " to " << destination2 << ":\n";
+    for (const auto& p : path2) {
+        std::cout << "  " << p << "\n";
+        std::cout << "Length of shortest path: " << path2.size() << "\n";
+    }
 
     // // Demonstrate the minSpanTree method
     // // Test 1: Find a minimum spanning tree of the file system
-    // std::map<fs::path, std::vector<fs::path>> tree1 = graph.minSpanTree();
-    // std::cout << "Minimum spanning tree:\n";
-    // for (const auto& pair : tree1) {
-    //     std::cout << pair.first << ":\n";
-    //     for (const auto& neighbor : pair.second) {
-    //         std::cout << "  " << neighbor << "\n";
-    //     }
-    // }
+    std::map<fs::path, std::vector<fs::path>> tree1 = graph.minSpanTree();
+    std::cout << "Minimum spanning tree:\n";
+    for (const auto& pair : tree1) {
+        std::cout << pair.first << ":\n";
+        for (const auto& neighbor : pair.second) {
+            std::cout << "  " << neighbor << "\n";
+        }
+    }
 
     // // Test 2: Build a new graph from a different directory and find its minimum spanning tree
-    // FileSystemGraph graph2;
-    // graph2.buildGraph("C:/Program Files");  // Replace with the path to the directory
-    // std::map<fs::path, std::vector<fs::path>> tree2 = graph2.minSpanTree();
-    // std::cout << "Minimum spanning tree of the second graph:\n";
-    // for (const auto& pair : tree2) {
-    //     std::cout << pair.first << ":\n";
-    //     for (const auto& neighbor : pair.second) {
-    //         std::cout << "  " << neighbor << "\n";
-    //     }
-    // }
+    FileSystemGraph graph2;
+    graph2.buildGraph("C:/Program Files");  // Replace with the path to the directory
+    std::map<fs::path, std::vector<fs::path>> tree2 = graph2.minSpanTree();
+    std::cout << "Minimum spanning tree of the second graph:\n";
+    for (const auto& pair : tree2) {
+        std::cout << pair.first << ":\n";
+        for (const auto& neighbor : pair.second) {
+            std::cout << "  " << neighbor << "\n";
+        }
+    }
 
     return 0;
 }
