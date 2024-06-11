@@ -12,5 +12,8 @@ Complexity Analysis: The complexity of addVertex and addEdge is O(V^2), where V 
 This was amazing to watch. It took about 3 minutes to go through all the directories in the graph
 ![alt text](image.png)
 
+# addVertex and addEdge output  screenshot
+![alt text](image-2.png)
+
 # Shortest Path Test 1 Output
 ![alt text](image-1.png)
